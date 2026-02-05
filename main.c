@@ -58,7 +58,67 @@ int main() {
 
   // Boucle principale
   while (1) {
+    read_set = master_set;
+    activity = select(max_fd + 1, &read_set, NULL, NULL, NULL);
 
+    if (activity < 0) {
+      perror("Select error");
+      exit(EXIT_FAILURE);
+    }
+
+    // 1. Nouvelle connexion
+    if (FD_ISSET(server_fd, &read_set)) {
+      client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &addrlen);
+      if (client_fd < 0) {
+        perror("Accept failed");
+        continue;
+      }
+
+      // Trouver un slot libre pour le nouveau client
+      int slot = -1;
+      for (i = 0; i < MAX_CLIENTS; i++) {
+        if (client_sockets[i] == -1) {
+          slot = 1;
+          break;
+        }
+      }
+
+      if (slot == -1) {
+        // Trop de clients
+        printf("Trop de clients");
+        close(client_fd);
+      } else {
+        // Ajouter le client
+        client_sockets[slot] = client_fd;
+        FD_SET(client_fd, &master_set);
+        if (client_fd > max_fd)
+          max_fd = client_fd;
+
+        printf("Client connecte [%d]\n", slot);
+      }
+    }
+
+    // 2. Donnees des clients existants
+    for (i = 0; i < MAX_CLIENTS; i++) {
+      int client_val = client_sockets[i];
+      if (client_val > 0 && FD_ISSET(client_val, &read_set)) {
+        // Reception des donnees
+        if ((valread = recv(client_val, buffer, BUFFER_SIZE, 0)) == 0) {
+          // Deconnexion propre ou connexion perdue
+          close(client_val);
+          FD_CLR(client_val, &master_set);
+          client_sockets[i] = -1;
+        } else {
+          // Traitement du message
+          buffer[valread] = '\0';
+
+          // Supprimer \r\n eventuels (netcat)
+          buffer[strcspn(buffer, "\r\n")] = '\0';
+
+          // Traitement de tout type de message
+        }
+      }
+    }
   }
 
   // Cleanup
