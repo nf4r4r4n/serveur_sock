@@ -41,7 +41,7 @@ FD_ISSET(int fd, fd_set *set) // Teste si fd est prêt
 - [x] Bind & Listen
 - [x] Initialisation du set principal
 - [ ] Boucle principale:
-  - [ ] Attente bloquante d'activité
-  - [ ] 1. Nouvelle connexion ? => Ajout du nouveau client
-  - [ ] 2. Données provenant de clients existants
+  - [x] Attente bloquante d'activité
+  - [x] 1. Nouvelle connexion ? => Ajout du nouveau client
+  - [x] 2. Données provenant de clients existants
 - [x] Cleanup
