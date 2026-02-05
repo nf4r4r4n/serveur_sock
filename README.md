@@ -35,13 +35,13 @@ FD_ISSET(int fd, fd_set *set) // Teste si fd est prêt
 
 ## Etapes
 
-- [ ] Initialisation tableau clients
-- [ ] Création socket serveur
-- [ ] Configuration adresse
-- [ ] Bind & Listen
-- [ ] Initialisation du set principal
+- [x] Initialisation tableau clients
+- [x] Création socket serveur
+- [x] Configuration adresse
+- [x] Bind & Listen
+- [x] Initialisation du set principal
 - [ ] Boucle principale:
   - [ ] Attente bloquante d'activité
   - [ ] 1. Nouvelle connexion ? => Ajout du nouveau client
   - [ ] 2. Données provenant de clients existants
-- [ ] Cleanup
+- [x] Cleanup
